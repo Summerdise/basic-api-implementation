@@ -4,6 +4,9 @@ public class RsItem {
     private String name;
     private String keyword;
 
+    public RsItem() {
+    }
+
     public RsItem(String name, String keyword) {
         this.name = name;
         this.keyword = keyword;
