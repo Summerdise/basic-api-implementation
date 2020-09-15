@@ -15,10 +15,16 @@ class RsListApplicationTests {
 
     @Autowired
     MockMvc mockMvc;
+
     @Test
     void getOneRsItemFromList() throws Exception {
         mockMvc.perform(get("/rs/0"))
                 .andExpect(content().string("第一条事件"));
     }
 
+    @Test
+    void getRsItemsFromListByStartNumber() throws Exception {
+        mockMvc.perform(get("/rs/list?start=0&end=2"))
+                .andExpect(content().string("[第一条事件, 第二条事件]"));
+    }
 }
