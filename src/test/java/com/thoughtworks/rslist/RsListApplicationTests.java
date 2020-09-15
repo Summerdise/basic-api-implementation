@@ -77,4 +77,16 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[修改name-2,修改keyword-1, 修改name-3,修改keyword-3, 第三条事件,3]"));
     }
+
+    @Test
+    void deleteItemInList() throws Exception {
+        mockMvc.perform(get("/rs/all"))
+                .andExpect(content().string("[第一条事件,1, 第二条事件,2, 第三条事件,3]"));
+        mockMvc.perform(get("/rs/delete1")).andExpect(status().isOk());
+        mockMvc.perform(get("/rs/all"))
+                .andExpect(content().string("[第一条事件,1, 第三条事件,3]"));
+        mockMvc.perform(get("/rs/delete2")).andExpect(status().isOk());
+        mockMvc.perform(get("/rs/all"))
+                .andExpect(content().string("[第一条事件,1, 第三条事件,3]"));
+    }
 }

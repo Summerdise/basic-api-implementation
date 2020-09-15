@@ -60,4 +60,12 @@ public class RsController {
             rsList.get(index).setKeyword(rsItem.getKeyword());
         }
     }
+
+    @GetMapping("/rs/delete{index}")
+    public void deleteRsItem(@PathVariable int index) {
+        if (index >= rsList.size()) {
+            return;
+        }
+        rsList.remove(index);
+    }
 }
