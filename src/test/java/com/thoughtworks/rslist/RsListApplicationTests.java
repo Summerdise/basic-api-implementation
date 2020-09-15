@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsItem;
 import org.junit.jupiter.api.Test;
@@ -49,5 +50,31 @@ class RsListApplicationTests {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1, 第二条事件,2, 第三条事件,3, 第四条事件,4]"));
+    }
+
+    @Test
+    void fixItemInList() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        RsItem noNameRsItem = new RsItem(null, "修改keyword-1");
+        String noNameJson = objectMapper.writeValueAsString(noNameRsItem);
+        mockMvc.perform(post("/rs/fix0").content(noNameJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/all"))
+                .andExpect(content().string("[第一条事件,修改keyword-1, 第二条事件,2, 第三条事件,3]"));
+
+        RsItem noKeywordRsItem = new RsItem("修改name-2", null);
+        String noKeywordJson = objectMapper.writeValueAsString(noKeywordRsItem);
+        mockMvc.perform(post("/rs/fix0").content(noKeywordJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/all"))
+                .andExpect(content().string("[修改name-2,修改keyword-1, 第二条事件,2, 第三条事件,3]"));
+
+        RsItem fixRsItem = new RsItem("修改name-3", "修改keyword-3");
+        String fixJson = objectMapper.writeValueAsString(fixRsItem);
+        mockMvc.perform(post("/rs/fix1").content(fixJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/all"))
+                .andExpect(content().string("[修改name-2,修改keyword-1, 修改name-3,修改keyword-3, 第三条事件,3]"));
     }
 }
