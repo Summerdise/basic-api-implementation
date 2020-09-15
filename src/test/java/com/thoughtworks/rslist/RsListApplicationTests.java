@@ -19,12 +19,15 @@ class RsListApplicationTests {
     @Test
     void getOneRsItemFromList() throws Exception {
         mockMvc.perform(get("/rs/0"))
-                .andExpect(content().string("第一条事件"));
+                .andExpect(content().string("第一条事件,1"));
     }
 
     @Test
     void getRsItemsFromListByStartNumber() throws Exception {
         mockMvc.perform(get("/rs/list?start=0&end=2"))
-                .andExpect(content().string("[第一条事件, 第二条事件]"));
+                .andExpect(content().string("[第一条事件,1, 第二条事件,2]"));
+        mockMvc.perform(get("/rs/list?start=0&end=3"))
+                .andExpect(content().string("[第一条事件,1, 第二条事件,2, 第三条事件,3]"));
+
     }
 }
