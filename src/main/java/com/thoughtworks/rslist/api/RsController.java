@@ -38,14 +38,12 @@ public class RsController {
     }
 
     @PostMapping("/rs/all")
-    public void insertRsItem(@RequestBody String rsItemString) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        RsItem rsItem = objectMapper.readValue(rsItemString, RsItem.class);
+    public void insertRsItem(@RequestBody RsItem rsItem) throws JsonProcessingException {
         rsList.add(rsItem);
     }
 
-    @PostMapping("/rs/fix{index}")
-    public void insertRsItem(@PathVariable int index, @RequestBody String rsItemString) throws JsonProcessingException {
+    @PostMapping("/rs/fix/{index}")
+    public void fixRsItem(@PathVariable int index, @RequestBody String rsItemString) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         RsItem rsItem = objectMapper.readValue(rsItemString, RsItem.class);
         if (rsItem.getName() == null && rsItem.getKeyword() == null) {
@@ -61,7 +59,7 @@ public class RsController {
         }
     }
 
-    @GetMapping("/rs/delete{index}")
+    @GetMapping("/rs/delete/{index}")
     public void deleteRsItem(@PathVariable int index) {
         if (index >= rsList.size()) {
             return;
