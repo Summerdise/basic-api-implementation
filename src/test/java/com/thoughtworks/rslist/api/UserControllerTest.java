@@ -66,7 +66,7 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
     @Test
-    void shouldNotRegisterSmallName() throws Exception {
+    void shouldNotRegisterLowAge() throws Exception {
         UserDto userDto = new UserDto("xiaowang",13,"female","a@thoughtworks.com","18888888888");
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -76,7 +76,7 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
     @Test
-    void shouldNotRegisterBigName() throws Exception {
+    void shouldNotRegisterHighAge() throws Exception {
         UserDto userDto = new UserDto("xiaowang",101,"female","a@thoughtworks.com","18888888888");
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -86,5 +86,56 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest());
     }
 
-    
+    @Test
+    void shouldNotRegisterNoneGender() throws Exception {
+        UserDto userDto = new UserDto("xiaowang",18,"","a@thoughtworks.com","18888888888");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userDtoJson = objectMapper.writeValueAsString(userDto);
+        mockMvc.perform(post("/user/register")
+                .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldNotRegisterWrongEmail() throws Exception {
+        UserDto userDto = new UserDto("xiaowang",18,"female","@thoughtworks.com","18888888888");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userDtoJson = objectMapper.writeValueAsString(userDto);
+        mockMvc.perform(post("/user/register")
+                .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldNotRegisterPhoneNotBeginWith1() throws Exception {
+        UserDto userDto = new UserDto("xiaowang",18,"female","@thoughtworks.com","88888888888");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userDtoJson = objectMapper.writeValueAsString(userDto);
+        mockMvc.perform(post("/user/register")
+                .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+    @Test
+    void shouldNotRegisterPhoneLessEleven() throws Exception {
+        UserDto userDto = new UserDto("xiaowang",18,"female","@thoughtworks.com","188888888");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userDtoJson = objectMapper.writeValueAsString(userDto);
+        mockMvc.perform(post("/user/register")
+                .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+    @Test
+    void shouldNotRegisterPhoneMoreEleven() throws Exception {
+        UserDto userDto = new UserDto("xiaowang",18,"female","@thoughtworks.com","188888888888");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String userDtoJson = objectMapper.writeValueAsString(userDto);
+        mockMvc.perform(post("/user/register")
+                .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
