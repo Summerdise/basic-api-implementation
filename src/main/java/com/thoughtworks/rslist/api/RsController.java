@@ -1,9 +1,13 @@
 package com.thoughtworks.rslist.api;
 
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsItem;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,6 +15,7 @@ import java.util.List;
 
 @RestController
 public class RsController {
+
 
     private List<RsItem> rsList = getRsList();
 
@@ -66,4 +71,5 @@ public class RsController {
         }
         rsList.remove(index);
     }
+    
 }
