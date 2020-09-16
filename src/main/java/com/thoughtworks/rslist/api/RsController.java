@@ -4,6 +4,7 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsItem;
+import com.thoughtworks.rslist.dto.UserDto;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,9 +22,10 @@ public class RsController {
 
     public List<RsItem> getRsList() {
         List<RsItem> rsList = new ArrayList<RsItem>();
-        rsList.add(new RsItem("第一条事件", "1"));
-        rsList.add(new RsItem("第二条事件", "2"));
-        rsList.add(new RsItem("第三条事件", "3"));
+        UserDto userDto = new UserDto("xiaowang",19,"female","a@thoughtworks.com","18888888888");
+        rsList.add(new RsItem("第一条事件", "1",userDto));
+        rsList.add(new RsItem("第二条事件", "2",userDto));
+        rsList.add(new RsItem("第三条事件", "3",userDto));
         return rsList;
     }
 

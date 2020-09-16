@@ -1,16 +1,16 @@
 package com.thoughtworks.rslist.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class RsItem {
     private String name;
     private String keyword;
-
-    public RsItem() {
-    }
-
-    public RsItem(String name, String keyword) {
-        this.name = name;
-        this.keyword = keyword;
-    }
+    private UserDto userDto;
 
     public String getName() {
         return name;
@@ -30,6 +30,6 @@ public class RsItem {
 
     @Override
     public String toString() {
-        return name + ',' + keyword;
+        return name + ',' + keyword +','+userDto.getUserName();
     }
 }
