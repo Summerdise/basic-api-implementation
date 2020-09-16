@@ -4,12 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class RsItem {
+
+    @NotEmpty
     private String name;
+    @NotEmpty
     private String keyword;
+
+    @NotNull
+
     private UserDto userDto;
 
     public String getName() {

@@ -30,4 +30,8 @@ public class UserDto {
     @Pattern(regexp = "^1\\d{10}$")
     private String phoneNumber;
 
+    @Override
+    public String toString() {
+        return "userName=" + userName;
+    }
 }

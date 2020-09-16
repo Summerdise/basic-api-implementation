@@ -21,9 +21,7 @@ class UserControllerTest {
 
     @Test
     void shouldRegisterUser() throws Exception {
-
         UserDto userDto = new UserDto("xiaowang",19,"female","a@thoughtworks.com","18888888888");
-
         ObjectMapper objectMapper = new ObjectMapper();
         String userDtoJson = objectMapper.writeValueAsString(userDto);
 

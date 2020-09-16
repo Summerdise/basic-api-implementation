@@ -39,7 +39,7 @@ public class RsControllerTest {
     }
 
     @Test
-    void insertItemIntoList() throws Exception {
+    void insertItemIntoListWithSameUserName() throws Exception {
         UserDto userDto = new UserDto("xiaowang",19,"female","a@thoughtworks.com","18888888888");
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
@@ -50,6 +50,29 @@ public class RsControllerTest {
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang, 第四条事件,4,xiaowang]"));
+    }
+
+    @Test
+    void insertItemIntoListWithDifferentUserName() throws Exception {
+        UserDto userDto = new UserDto("dawang",19,"female","a@thoughtworks.com","18888888888");
+        mockMvc.perform(get("/rs/all"))
+                .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
+        RsItem rsItem = new RsItem("第四条事件", "4",userDto);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(rsItem);
+        mockMvc.perform(post("/rs/all").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/user/all"))
+                .andExpect(content().string("[]"));
+        String jsonUser = objectMapper.writeValueAsString(userDto);
+        mockMvc.perform(post("/user/register")
+                .content(jsonUser).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/user/all"))
+                .andExpect(content().string("[userName=dawang]"));
+        mockMvc.perform(get("/rs/all"))
+                .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
+
     }
 
     @Test
@@ -91,4 +114,6 @@ public class RsControllerTest {
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第三条事件,3,xiaowang]"));
     }
+
+
 }

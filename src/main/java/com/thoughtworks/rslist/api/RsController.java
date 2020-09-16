@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,8 +46,13 @@ public class RsController {
     }
 
     @PostMapping("/rs/all")
-    public void insertRsItem(@RequestBody RsItem rsItem) throws JsonProcessingException {
-        rsList.add(rsItem);
+    public void insertRsItem(@Valid @RequestBody RsItem rsItem) throws JsonProcessingException {
+        if(rsItem.getUserDto().getUserName().equals("xiaowang")){
+            rsList.add(rsItem);
+        }else{
+            UserController userController = new UserController();
+            userController.register(rsItem.getUserDto());
+        }
     }
 
     @PostMapping("/rs/fix/{index}")
