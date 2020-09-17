@@ -32,6 +32,19 @@ public class UserDto {
 
     @Override
     public String toString() {
-        return "userName=" + userName;
+//        {
+//            "user_name": "xxxx",
+//                "user_age": 19,
+//                "user_gender": "female",
+//                "user_email": "xxx@xx",
+//                "user_phone": "1xxxxxxxxxx"
+//        }
+        return "{" +
+                "\"user_name\": \"" + userName +
+                "\",\"user_age\":" + age +
+                ", \"user_gender\": \"" + gender +
+                "\", \"user_email\":" + email +
+                ", \"user_phone\": \"" + phoneNumber +
+                "\"}";
     }
 }

@@ -62,14 +62,14 @@ public class RsControllerTest {
         String json = objectMapper.writeValueAsString(rsItem);
         mockMvc.perform(post("/rs/all").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-        mockMvc.perform(get("/user/all"))
+        mockMvc.perform(get("/users"))
                 .andExpect(content().string("[]"));
         String jsonUser = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(jsonUser).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-        mockMvc.perform(get("/user/all"))
-                .andExpect(content().string("[userName=dawang]"));
+        mockMvc.perform(get("/users"))
+                .andExpect(content().string("[{\"user_name\": \"dawang\",\"user_age\":19, \"user_gender\": \"female\", \"user_email\":a@thoughtworks.com, \"user_phone\": \"18888888888\"}]"));
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
     }
