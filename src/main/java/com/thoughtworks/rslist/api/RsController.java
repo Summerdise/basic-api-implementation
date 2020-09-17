@@ -46,21 +46,24 @@ public class RsController {
     }
 
     @PostMapping("/rs/all")
-    public void insertRsItem(@Valid @RequestBody RsItem rsItem) throws JsonProcessingException {
+    public ResponseEntity insertRsItem(@Valid @RequestBody RsItem rsItem) throws JsonProcessingException {
         if(rsItem.getUserDto().getUserName().equals("xiaowang")){
             rsList.add(rsItem);
+            return ResponseEntity.created(null).build();
         }else{
             UserController userController = new UserController();
             userController.register(rsItem.getUserDto());
+            return ResponseEntity.badRequest().build();
         }
+
     }
 
     @PostMapping("/rs/fix/{index}")
-    public void fixRsItem(@PathVariable int index, @RequestBody String rsItemString) throws JsonProcessingException {
+    public ResponseEntity fixRsItem(@PathVariable int index, @RequestBody String rsItemString) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         RsItem rsItem = objectMapper.readValue(rsItemString, RsItem.class);
         if (rsItem.getName() == null && rsItem.getKeyword() == null) {
-            return;
+            return ResponseEntity.badRequest().build();
         }
         if (rsItem.getName() == null) {
             rsList.get(index).setKeyword(rsItem.getKeyword());
@@ -70,6 +73,7 @@ public class RsController {
             rsList.get(index).setName(rsItem.getName());
             rsList.get(index).setKeyword(rsItem.getKeyword());
         }
+        return ResponseEntity.created(null).build();
     }
 
     @GetMapping("/rs/delete/{index}")

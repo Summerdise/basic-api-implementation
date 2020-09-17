@@ -17,8 +17,9 @@ public class UserController {
     private List<UserDto> userDtoList = new ArrayList<>();
 
     @PostMapping("/user/register")
-    public void register(@Valid @RequestBody UserDto userDto){
+    public ResponseEntity register(@Valid @RequestBody UserDto userDto){
         userDtoList.add(userDto);
+        return ResponseEntity.created(null).build();
     }
 
     @GetMapping("/user/all")

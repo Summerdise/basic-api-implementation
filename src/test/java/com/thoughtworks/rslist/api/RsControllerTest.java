@@ -47,7 +47,7 @@ public class RsControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsItem);
         mockMvc.perform(post("/rs/all").content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang, 第四条事件,4,xiaowang]"));
     }
@@ -61,13 +61,13 @@ public class RsControllerTest {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsItem);
         mockMvc.perform(post("/rs/all").content(json).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isBadRequest());
         mockMvc.perform(get("/user/all"))
                 .andExpect(content().string("[]"));
         String jsonUser = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(jsonUser).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/user/all"))
                 .andExpect(content().string("[userName=dawang]"));
         mockMvc.perform(get("/rs/all"))
@@ -149,21 +149,21 @@ public class RsControllerTest {
         RsItem noNameRsItem = new RsItem(null, "修改keyword-1",userDto);
         String noNameJson = objectMapper.writeValueAsString(noNameRsItem);
         mockMvc.perform(post("/rs/fix/0").content(noNameJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,修改keyword-1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
 
         RsItem noKeywordRsItem = new RsItem("修改name-2", null,userDto);
         String noKeywordJson = objectMapper.writeValueAsString(noKeywordRsItem);
         mockMvc.perform(post("/rs/fix/0").content(noKeywordJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[修改name-2,修改keyword-1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
 
         RsItem fixRsItem = new RsItem("修改name-3", "修改keyword-3",userDto);
         String fixJson = objectMapper.writeValueAsString(fixRsItem);
         mockMvc.perform(post("/rs/fix/1").content(fixJson).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[修改name-2,修改keyword-1,xiaowang, 修改name-3,修改keyword-3,xiaowang, 第三条事件,3,xiaowang]"));
     }
