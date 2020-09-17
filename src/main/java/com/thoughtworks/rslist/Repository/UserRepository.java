@@ -8,4 +8,10 @@ import java.util.List;
 
 public interface UserRepository extends CrudRepository<UserEntity,Integer> {
     List<UserEntity> findAll();
+
+    @Override
+    void deleteById(Integer integer);
+
+    @Override
+    void deleteAll();
 }

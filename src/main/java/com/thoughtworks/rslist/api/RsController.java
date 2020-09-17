@@ -52,7 +52,7 @@ public class RsController {
             return ResponseEntity.created(null).build();
         }else{
             UserController userController = new UserController();
-            userController.register(rsItem.getUserDto());
+            userController.add(rsItem.getUserDto());
             return ResponseEntity.badRequest().build();
         }
 

@@ -65,7 +65,7 @@ public class RsControllerTest {
         mockMvc.perform(get("/users"))
                 .andExpect(content().string("[]"));
         String jsonUser = objectMapper.writeValueAsString(userDto);
-        mockMvc.perform(post("/user/register")
+        mockMvc.perform(post("/user/add")
                 .content(jsonUser).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
         mockMvc.perform(get("/users"))
