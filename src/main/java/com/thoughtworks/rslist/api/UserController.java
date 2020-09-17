@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.dto.UserDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,8 +22,8 @@ public class UserController {
     }
 
     @GetMapping("/user/all")
-    public String getAllUserList(){
-        return userDtoList.toString();
+    public ResponseEntity<String> getAllUserList(){
+        return ResponseEntity.ok(userDtoList.toString());
     }
 
 }

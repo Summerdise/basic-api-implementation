@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsItem;
 import com.thoughtworks.rslist.dto.UserDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
@@ -31,18 +31,18 @@ public class RsController {
     }
 
     @GetMapping("/rs/all")
-    public String getAllRsItems() {
-        return rsList.toString();
+    public ResponseEntity<String> getAllRsItems() {
+        return ResponseEntity.ok(rsList.toString());
     }
 
     @GetMapping("/rs/{index}")
-    public String getOneRsItemFromList(@PathVariable int index) {
-        return rsList.get(index).toString();
+    public ResponseEntity<String> getOneRsItemFromList(@PathVariable int index) {
+        return ResponseEntity.ok(rsList.get(index).toString());
     }
 
     @GetMapping("/rs/list")
-    public String getRsItemsFromListByStartNumber(@RequestParam int start, @RequestParam int end) {
-        return rsList.subList(start, end).toString();
+    public ResponseEntity<String> getRsItemsFromListByStartNumber(@RequestParam int start, @RequestParam int end) {
+        return ResponseEntity.ok(rsList.subList(start, end).toString());
     }
 
     @PostMapping("/rs/all")
@@ -79,5 +79,4 @@ public class RsController {
         }
         rsList.remove(index);
     }
-
 }
