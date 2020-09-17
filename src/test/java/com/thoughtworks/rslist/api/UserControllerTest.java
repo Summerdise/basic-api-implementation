@@ -1,6 +1,8 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.Entity.UserEntity;
+import com.thoughtworks.rslist.Repository.UserRepository;
 import com.thoughtworks.rslist.dto.UserDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -18,6 +23,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest {
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    UserRepository userRepository;
 
     @Test
     void shouldRegisterUser() throws Exception {
@@ -28,6 +35,10 @@ class UserControllerTest {
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+        List<UserEntity> userEntityList = userRepository.findAll();
+        assertEquals(1,userEntityList.size());
+        assertEquals("xiaowang",userEntityList.get(0).getUserName());
     }
 
     @Test

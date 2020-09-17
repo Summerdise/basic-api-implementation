@@ -1,6 +1,9 @@
 package com.thoughtworks.rslist.api;
 
+import com.thoughtworks.rslist.Entity.UserEntity;
+import com.thoughtworks.rslist.Repository.UserRepository;
 import com.thoughtworks.rslist.dto.UserDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,10 +19,20 @@ public class UserController {
 
     private List<UserDto> userDtoList = new ArrayList<>();
 
+    @Autowired
+    UserRepository userRepository;
+
     @PostMapping("/user/register")
-    public ResponseEntity register(@Valid @RequestBody UserDto userDto){
-        userDtoList.add(userDto);
-        return ResponseEntity.created(null).build();
+    public void register(@Valid @RequestBody UserDto userDto){
+        UserEntity userEntity = UserEntity.builder()
+                .userName(userDto.getUserName())
+                .email(userDto.getEmail())
+                .age(userDto.getAge())
+                .gender(userDto.getGender())
+                .phone(userDto.getPhoneNumber())
+                .build();
+        userRepository.save(userEntity);
+
     }
 
     @GetMapping("/users")

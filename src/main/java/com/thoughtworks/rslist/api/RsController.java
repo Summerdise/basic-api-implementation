@@ -1,12 +1,10 @@
 package com.thoughtworks.rslist.api;
 
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.dto.RsItem;
 import com.thoughtworks.rslist.dto.UserDto;
-import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +17,6 @@ import java.util.List;
 
 @RestController
 public class RsController {
-
 
     private List<RsItem> rsList = getRsList();
 
