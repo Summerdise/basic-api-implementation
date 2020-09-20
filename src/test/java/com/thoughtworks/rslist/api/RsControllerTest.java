@@ -1,6 +1,10 @@
 package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.Entity.RsEventEntity;
+import com.thoughtworks.rslist.Entity.UserEntity;
+import com.thoughtworks.rslist.Repository.RsEventRepository;
+import com.thoughtworks.rslist.Repository.UserRepository;
 import com.thoughtworks.rslist.dto.RsItem;
 import com.thoughtworks.rslist.dto.UserDto;
 import org.junit.jupiter.api.Test;
@@ -11,6 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -23,7 +30,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RsControllerTest {
     @Autowired
     MockMvc mockMvc;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    RsEventRepository rsEventRepository;
 
+    ObjectMapper objectMapper = new ObjectMapper();
     @Test
     void getOneRsItemFromList() throws Exception {
         mockMvc.perform(get("/rs/0"))
@@ -44,7 +56,6 @@ public class RsControllerTest {
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
         RsItem rsItem = new RsItem("第四条事件", "4",userDto);
-        ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsItem);
         mockMvc.perform(post("/rs/all").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -58,7 +69,6 @@ public class RsControllerTest {
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
         RsItem rsItem = new RsItem("第四条事件", "4",userDto);
-        ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsItem);
         mockMvc.perform(post("/rs/all").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -80,7 +90,6 @@ public class RsControllerTest {
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
         RsItem rsItem = new RsItem("", "4",userDto);
-        ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsItem);
         mockMvc.perform(post("/rs/all").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -101,7 +110,6 @@ public class RsControllerTest {
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
         RsItem rsItem = new RsItem("第四条事件", "",userDto);
-        ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsItem);
         mockMvc.perform(post("/rs/all").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -123,7 +131,6 @@ public class RsControllerTest {
         mockMvc.perform(get("/rs/all"))
                 .andExpect(content().string("[第一条事件,1,xiaowang, 第二条事件,2,xiaowang, 第三条事件,3,xiaowang]"));
         RsItem rsItem = new RsItem("第四条事件", "4",null);
-        ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(rsItem);
         mockMvc.perform(post("/rs/all").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -143,9 +150,6 @@ public class RsControllerTest {
     @Test
     void fixItemInList() throws Exception {
         UserDto userDto = new UserDto("xiaowang",19,"female","a@thoughtworks.com","18888888888");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
         RsItem noNameRsItem = new RsItem(null, "修改keyword-1",userDto);
         String noNameJson = objectMapper.writeValueAsString(noNameRsItem);
         mockMvc.perform(post("/rs/fix/0").content(noNameJson).contentType(MediaType.APPLICATION_JSON))
@@ -181,4 +185,30 @@ public class RsControllerTest {
     }
 
 
+    @Test
+    public void shouldAddRsEventWhenUserExists() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+                .userName("user_1")
+                .gender("male")
+                .age(22)
+                .email("a@thoushtworks.com")
+                .phone("12345678912")
+                .voteNum(20)
+                .build();
+        userRepository.save(userEntity);
+        RsEventEntity rsEntity = RsEventEntity.builder()
+                .eventName("event1")
+                .keyword("news")
+                .userId(1)
+                .build();
+        String rsEntityJson = objectMapper.writeValueAsString(rsEntity);
+        mockMvc.perform(post("/rs/event")
+                .content(rsEntityJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        List<RsEventEntity> rsEvents =rsEventRepository.findAll();
+        assertEquals(1,rsEvents.size());
+        assertEquals("event1",rsEvents.get(0).getEventName());
+    }
 }

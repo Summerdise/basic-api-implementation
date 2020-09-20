@@ -32,15 +32,15 @@ class UserControllerTest {
 
     @Test
     void shouldRegisterUser() throws Exception {
-        UserDto userDto = new UserDto("xiaowang",19,"female","a@thoughtworks.com","18888888888");
+        UserDto userDto = new UserDto("xiaowang", 19, "female", "a@thoughtworks.com", "18888888888");
 
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         List<UserEntity> userEntityList = userRepository.findAll();
-        assertEquals(1,userEntityList.size());
-        assertEquals("xiaowang",userEntityList.get(0).getUserName());
+        assertEquals(1, userEntityList.size());
+        assertEquals("xiaowang", userEntityList.get(0).getUserName());
     }
 
     @Test
@@ -52,30 +52,28 @@ class UserControllerTest {
 
 
     @Test
-    void shouldDeleteUser() throws Exception{
+    void shouldDeleteUser() throws Exception {
         userRepository.deleteAll();
         mockMvc.perform(get("/user/delete")).andExpect(status().isOk())
                 .andExpect(content().string("[]"));
 
-        UserDto userDto = new UserDto("xiaowang",19,"female","a@thoughtworks.com","18888888888");
+        UserDto userDto = new UserDto("xiaowang", 19, "female", "a@thoughtworks.com", "18888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         List<UserEntity> userEntityList = userRepository.findAll();
-        assertEquals(1,userEntityList.size());
-        assertEquals("xiaowang",userEntityList.get(0).getUserName());
+        assertEquals(1, userEntityList.size());
+        assertEquals("xiaowang", userEntityList.get(0).getUserName());
 
         mockMvc.perform(get("/user/delete/1")).andExpect(status().isOk())
                 .andExpect(content().string("[]"));
     }
 
 
-
-
     @Test
     void shouldNotRegisterNullName() throws Exception {
-        UserDto userDto = new UserDto("",19,"female","a@thoughtworks.com","18888888888");
+        UserDto userDto = new UserDto("", 19, "female", "a@thoughtworks.com", "18888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
@@ -84,7 +82,7 @@ class UserControllerTest {
 
     @Test
     void shouldNotRegisterLongName() throws Exception {
-        UserDto userDto = new UserDto("sajhsajhlahdjadh",19,"female","a@thoughtworks.com","18888888888");
+        UserDto userDto = new UserDto("sajhsajhlahdjadh", 19, "female", "a@thoughtworks.com", "18888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
@@ -93,23 +91,25 @@ class UserControllerTest {
 
     @Test
     void shouldNotRegisterNoneAge() throws Exception {
-        UserDto userDto = new UserDto("xiaowang",null,"female","a@thoughtworks.com","18888888888");
+        UserDto userDto = new UserDto("xiaowang", null, "female", "a@thoughtworks.com", "18888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     void shouldNotRegisterLowAge() throws Exception {
-        UserDto userDto = new UserDto("xiaowang",13,"female","a@thoughtworks.com","18888888888");
+        UserDto userDto = new UserDto("xiaowang", 13, "female", "a@thoughtworks.com", "18888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     void shouldNotRegisterHighAge() throws Exception {
-        UserDto userDto = new UserDto("xiaowang",101,"female","a@thoughtworks.com","18888888888");
+        UserDto userDto = new UserDto("xiaowang", 101, "female", "a@thoughtworks.com", "18888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
@@ -118,7 +118,7 @@ class UserControllerTest {
 
     @Test
     void shouldNotRegisterNoneGender() throws Exception {
-        UserDto userDto = new UserDto("xiaowang",18,"","a@thoughtworks.com","18888888888");
+        UserDto userDto = new UserDto("xiaowang", 18, "", "a@thoughtworks.com", "18888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
@@ -127,7 +127,7 @@ class UserControllerTest {
 
     @Test
     void shouldNotRegisterWrongEmail() throws Exception {
-        UserDto userDto = new UserDto("xiaowang",18,"female","@thoughtworks.com","18888888888");
+        UserDto userDto = new UserDto("xiaowang", 18, "female", "@thoughtworks.com", "18888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
@@ -136,23 +136,25 @@ class UserControllerTest {
 
     @Test
     void shouldNotRegisterPhoneNotBeginWith1() throws Exception {
-        UserDto userDto = new UserDto("xiaowang",18,"female","@thoughtworks.com","88888888888");
+        UserDto userDto = new UserDto("xiaowang", 18, "female", "@thoughtworks.com", "88888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     void shouldNotRegisterPhoneLessEleven() throws Exception {
-        UserDto userDto = new UserDto("xiaowang",18,"female","@thoughtworks.com","188888888");
+        UserDto userDto = new UserDto("xiaowang", 18, "female", "@thoughtworks.com", "188888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
     @Test
     void shouldNotRegisterPhoneMoreEleven() throws Exception {
-        UserDto userDto = new UserDto("xiaowang",18,"female","@thoughtworks.com","188888888888");
+        UserDto userDto = new UserDto("xiaowang", 18, "female", "@thoughtworks.com", "188888888888");
         String userDtoJson = objectMapper.writeValueAsString(userDto);
         mockMvc.perform(post("/user/register")
                 .content(userDtoJson).contentType(MediaType.APPLICATION_JSON))

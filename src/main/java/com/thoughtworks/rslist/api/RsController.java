@@ -3,20 +3,30 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.Entity.RsEventEntity;
+import com.thoughtworks.rslist.Repository.RsEventRepository;
+import com.thoughtworks.rslist.Repository.UserRepository;
+import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.RsItem;
 import com.thoughtworks.rslist.dto.UserDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
+import javax.swing.text.html.parser.Entity;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class RsController {
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    RsEventRepository rsEventRepository;
 
     private List<RsItem> rsList = getRsList();
 
@@ -55,7 +65,6 @@ public class RsController {
             userController.add(rsItem.getUserDto());
             return ResponseEntity.badRequest().build();
         }
-
     }
 
     @PostMapping("/rs/fix/{index}")
@@ -82,5 +91,16 @@ public class RsController {
             return;
         }
         rsList.remove(index);
+    }
+
+    @PostMapping("/rs/event")
+    public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent){
+        RsEventEntity entity = RsEventEntity.builder()
+                .eventName(rsEvent.getEventName())
+                .keyword(rsEvent.getKeyword())
+                .userId(rsEvent.getUserId())
+                .build();
+        rsEventRepository.save(entity);
+        return ResponseEntity.created(null).build();
     }
 }
