@@ -19,8 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -192,6 +191,7 @@ public class RsControllerTest {
     }
 
 
+    //新
     @Test
     public void shouldAddRsEvent() throws Exception {
         UserEntity userEntity = UserEntity.builder()
@@ -208,6 +208,7 @@ public class RsControllerTest {
                 .keyword("news")
                 .userId(1)
                 .build();
+        rsEventRepository.save(rsEntity);
         String rsEntityJson = objectMapper.writeValueAsString(rsEntity);
         mockMvc.perform(post("/rs/event")
                 .content(rsEntityJson)
@@ -230,8 +231,37 @@ public class RsControllerTest {
                 .content(rsEntityJson)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
-
         List<RsEventEntity> rsEvents =rsEventRepository.findAll();
         assertEquals(0,rsEvents.size());
     }
+
+    @Test
+    public void shouldDeleteUser() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+                .userName("user_1")
+                .gender("male")
+                .age(22)
+                .email("a@thoushtworks.com")
+                .phone("12345678912")
+                .voteNum(20)
+                .build();
+        userRepository.save(userEntity);
+        RsEventEntity rsEntity = RsEventEntity.builder()
+                .eventName("event1")
+                .keyword("news")
+                .userId(1)
+                .build();
+        rsEventRepository.save(rsEntity);
+
+        mockMvc.perform(delete("/rs/delete/{id}",userEntity.getId()))
+                .andExpect(status().isNoContent());
+
+        List<UserEntity> users = userRepository.findAll();
+        List<RsEventEntity> rsEvents = rsEventRepository.findAll();
+
+        assertEquals(0,users.size());
+        assertEquals(0,rsEvents.size());
+
+    }
+
 }

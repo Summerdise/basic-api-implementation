@@ -10,6 +10,7 @@ import com.thoughtworks.rslist.dto.RsEvent;
 import com.thoughtworks.rslist.dto.RsItem;
 import com.thoughtworks.rslist.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,9 +69,7 @@ public class RsController {
     }
 
     @PostMapping("/rs/fix/{index}")
-    public ResponseEntity fixRsItem(@PathVariable int index, @RequestBody String rsItemString) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        RsItem rsItem = objectMapper.readValue(rsItemString, RsItem.class);
+    public ResponseEntity fixRsItem(@PathVariable int index, @RequestBody RsItem rsItem) throws JsonProcessingException {
         if (rsItem.getName() == null && rsItem.getKeyword() == null) {
             return ResponseEntity.badRequest().build();
         }
@@ -106,5 +105,12 @@ public class RsController {
 
         rsEventRepository.save(entity);
         return ResponseEntity.created(null).build();
+    }
+
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @DeleteMapping("/rs/delete/{index}")
+    public void deleteUsers(@PathVariable int index){
+        userRepository.deleteById(index);
+        rsEventRepository.deleteAllByUserId(index);
     }
 }
