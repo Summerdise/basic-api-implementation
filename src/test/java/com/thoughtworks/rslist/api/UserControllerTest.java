@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.Entity.UserEntity;
 import com.thoughtworks.rslist.Repository.UserRepository;
 import com.thoughtworks.rslist.dto.UserDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +30,11 @@ class UserControllerTest {
     UserRepository userRepository;
 
     ObjectMapper objectMapper = new ObjectMapper();
+
+    @BeforeEach
+    void setup(){
+        userRepository.deleteAll();
+    }
 
     @Test
     void shouldRegisterUser() throws Exception {

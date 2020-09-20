@@ -7,6 +7,7 @@ import com.thoughtworks.rslist.Repository.RsEventRepository;
 import com.thoughtworks.rslist.Repository.UserRepository;
 import com.thoughtworks.rslist.dto.RsItem;
 import com.thoughtworks.rslist.dto.UserDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -36,6 +37,12 @@ public class RsControllerTest {
     RsEventRepository rsEventRepository;
 
     ObjectMapper objectMapper = new ObjectMapper();
+
+    @BeforeEach
+    void setup(){
+        userRepository.deleteAll();
+        rsEventRepository.deleteAll();
+    }
     @Test
     void getOneRsItemFromList() throws Exception {
         mockMvc.perform(get("/rs/0"))
@@ -186,7 +193,7 @@ public class RsControllerTest {
 
 
     @Test
-    public void shouldAddRsEventWhenUserExists() throws Exception {
+    public void shouldAddRsEvent() throws Exception {
         UserEntity userEntity = UserEntity.builder()
                 .userName("user_1")
                 .gender("male")
@@ -210,5 +217,21 @@ public class RsControllerTest {
         List<RsEventEntity> rsEvents =rsEventRepository.findAll();
         assertEquals(1,rsEvents.size());
         assertEquals("event1",rsEvents.get(0).getEventName());
+    }
+    @Test
+    public void shouldAddRsEventWhenUserIsNotExsit() throws Exception {
+        RsEventEntity rsEntity = RsEventEntity.builder()
+                .eventName("event1")
+                .keyword("news")
+                .userId(1)
+                .build();
+        String rsEntityJson = objectMapper.writeValueAsString(rsEntity);
+        mockMvc.perform(post("/rs/event")
+                .content(rsEntityJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+
+        List<RsEventEntity> rsEvents =rsEventRepository.findAll();
+        assertEquals(0,rsEvents.size());
     }
 }

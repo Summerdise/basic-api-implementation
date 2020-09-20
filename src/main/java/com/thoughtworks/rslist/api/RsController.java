@@ -95,11 +95,15 @@ public class RsController {
 
     @PostMapping("/rs/event")
     public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent){
+        if(!userRepository.existsById(rsEvent.getUserId())){
+            return ResponseEntity.badRequest().build();
+        }
         RsEventEntity entity = RsEventEntity.builder()
                 .eventName(rsEvent.getEventName())
                 .keyword(rsEvent.getKeyword())
                 .userId(rsEvent.getUserId())
                 .build();
+
         rsEventRepository.save(entity);
         return ResponseEntity.created(null).build();
     }
