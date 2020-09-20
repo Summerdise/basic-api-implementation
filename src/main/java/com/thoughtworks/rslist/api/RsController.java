@@ -107,10 +107,5 @@ public class RsController {
         return ResponseEntity.created(null).build();
     }
 
-    @ResponseStatus(code = HttpStatus.NO_CONTENT)
-    @DeleteMapping("/rs/delete/{index}")
-    public void deleteUsers(@PathVariable int index){
-        userRepository.deleteById(index);
-        rsEventRepository.deleteAllByUserId(index);
-    }
+
 }

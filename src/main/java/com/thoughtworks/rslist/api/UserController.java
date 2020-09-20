@@ -1,9 +1,12 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.Entity.UserEntity;
+import com.thoughtworks.rslist.Repository.RsEventRepository;
 import com.thoughtworks.rslist.Repository.UserRepository;
 import com.thoughtworks.rslist.dto.UserDto;
+import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +21,10 @@ public class UserController {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    RsEventRepository rsEventRepository;
+
+
 
     @PostMapping("/user/add")
     public ResponseEntity add(@Valid @RequestBody UserDto userDto){
@@ -52,5 +59,11 @@ public class UserController {
     public ResponseEntity<String> deleteUserById(@PathVariable Integer id){
         userRepository.deleteById(id);
         return ResponseEntity.ok(userDtoList.toString());
+    }
+
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    @DeleteMapping("/user/delete/{index}")
+    public void deleteUsers(@PathVariable int index){
+        userRepository.deleteById(index);
     }
 }

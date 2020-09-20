@@ -28,4 +28,6 @@ public class RsEventEntity {
     @NotEmpty
     private String keyword;
     private int userId;
+
+
 }
